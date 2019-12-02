@@ -10,11 +10,12 @@ class Category extends Model
     protected $table = 'categories';
     protected $filliable = ['name', 'user_id'];
 
-    public function add_category(Request $request)
+    public function add_category(Request $request, $user)
     {
         $category = new Category();
 
         $category->name = $request->name;
+        $category->user_id = $user->id;
         $category->save();
     }
 }

@@ -41,15 +41,16 @@ class categoryController extends Controller
         $token = new Token();
         $data = $token->decode($token_header);
 
-        $user = User::where('id', $data->email)->first();
+        //$user = new User();
+        $user = User::where('email', $data->email)->first();
         
-
+        //var_dump($user);exit;
         $category = new Category();
-        $user->categories();
-        $category->add_category($request);
+        
+        $category->add_category($request, $user);
 
         return response()->json([
-            "message" => "Libro añadido"
+            "message" => "nueva categoria"
         ], 200);
     }
 
@@ -62,10 +63,9 @@ class categoryController extends Controller
     public function showCategory($id)
     {
         $category = Category::all();
-        foreach($category as $key => $value)
-        {
-            print($value);
-        }
+        return response()->json([
+            "Categories" => $category
+        ], 200);
     }
 
     /**

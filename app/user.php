@@ -14,6 +14,7 @@ class User extends Model
     public function categories()
     {
         return $this->hasMany('App\user', 'user_id');
+        //var_dump($this->hasMany('App\user', 'user_id')); exit;
     }
 
     public function register(Request $request)
