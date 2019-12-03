@@ -25,6 +25,5 @@ Route::post('login', 'userController@login');
 Route::group(['middleware' => ['auth']], function ()
 {
     Route::apiResource('categories', 'categoryController');
-    Route::post('storeCategory', 'categorycontroller@storeCategory');
     Route::get('show', 'userController@show');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use App\Helpers\Token;
 
 class checkAuth
 {
@@ -20,6 +21,14 @@ class checkAuth
 
         if($user->is_authorized($request))
         {
+
+            $token_header = $request->header('Authorization');
+            $token = new Token();
+            $data = $token->decode($token_header);
+
+            //$request->header('Authorization') = $data;
+            $request->request->add(['data_token' => $data]);
+
             return $next($request);
         }
         

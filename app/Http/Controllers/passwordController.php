@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\Token;
+use App\Category;
+use App\Passwords;
 
 class passwordController extends Controller
 {
@@ -34,7 +37,21 @@ class passwordController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $token_header = $request->header('Authorization');
+        $token = new Token();
+        $data = $token->decode($token_header);
+
+        //$user = new User();
+        $category = Category::where('email', $data->email)->first();
+        
+        //var_dump($user);exit;
+        $category = new Category();
+        
+        $category->add_category($request, $user);
+
+        return response()->json([
+            "message" => "nueva categoria"
+        ], 200);
     }
 
     /**

@@ -35,14 +35,16 @@ class categoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeCategory(Request $request)
+    public function store(Request $request)
     {
-        $token_header = $request->header('Authorization');
-        $token = new Token();
-        $data = $token->decode($token_header);
+        //print($request->email->email);exit;
+        $email = $request->data_token->email;
+        // $token = new Token();
+        // $data = $token->decode($token_header);
 
         //$user = new User();
-        $user = User::where('email', $data->email)->first();
+        $user = User::where('email', $email)->first();
+
         
         //var_dump($user);exit;
         $category = new Category();
