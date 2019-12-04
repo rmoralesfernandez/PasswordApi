@@ -79,7 +79,7 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id = null)
     {
         $user = User::all();
         foreach($user as $key => $value)
@@ -117,8 +117,34 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+
+        // $data_token = [
+        //     'email' => $request->email,
+        // ];
+        
+
+        // $user = User::where($request->email)->first();
+
+        // if($user->password == $request->password)
+        // {
+        //     $token = new Token($data_token);
+        //     $token_encode = $token->encode();
+
+        //     $user.delete();
+
+        $email = $request->data_token->email;
+        // var_dump($email);exit;
+        $user = User::where('email', $email)->first();
+
+        // var_dump($user);exit;
+        // var_dump($user->email);exit;
+
+        $user->delete();
+
+            return response()->json([
+                "message" => 'el usuario ha sido eliminado'
+            ], 200);
     }
 }

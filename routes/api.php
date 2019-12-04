@@ -26,4 +26,5 @@ Route::group(['middleware' => ['auth']], function ()
 {
     Route::apiResource('categories', 'categoryController');
     Route::get('show', 'userController@show');
+    Route::delete('destroy', 'userController@destroy');
 });
