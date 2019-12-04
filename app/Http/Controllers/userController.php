@@ -106,9 +106,18 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
+
     {
-        //
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
+
+        // $user_update = new User();
+        $user->name = $request->only('name');
+        var_dump($request->input('name'));exit;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->update();
     }
 
     /**
@@ -120,26 +129,8 @@ class userController extends Controller
     public function destroy(Request $request)
     {
 
-        // $data_token = [
-        //     'email' => $request->email,
-        // ];
-        
-
-        // $user = User::where($request->email)->first();
-
-        // if($user->password == $request->password)
-        // {
-        //     $token = new Token($data_token);
-        //     $token_encode = $token->encode();
-
-        //     $user.delete();
-
         $email = $request->data_token->email;
-        // var_dump($email);exit;
         $user = User::where('email', $email)->first();
-
-        // var_dump($user);exit;
-        // var_dump($user->email);exit;
 
         $user->delete();
 

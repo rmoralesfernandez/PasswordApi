@@ -17,7 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('users', 'userController');
 Route::post('store', 'userController@store');
 Route::post('login', 'userController@login');
 
@@ -25,6 +24,8 @@ Route::post('login', 'userController@login');
 Route::group(['middleware' => ['auth']], function ()
 {
     Route::apiResource('categories', 'categoryController');
-    Route::get('show', 'userController@show');
-    Route::delete('destroy', 'userController@destroy');
+    Route::apiResource('users', 'userController');
+    // Route::get('show', 'userController@show');
+    // Route::delete('destroy', 'userController@destroy');
+    // Route::post('update', 'userController@update');
 });
