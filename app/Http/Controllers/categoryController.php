@@ -88,9 +88,13 @@ class categoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $category_LastName = $request->LastName;
+        $category = Category::where('name', $category_LastName)->first();
+
+        $category->name = $request->NewName;
+        $category->update();
     }
 
     /**
@@ -99,8 +103,15 @@ class categoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $category_name = $request->name;
+        $category = Category::where('name', $category_name)->first();
+
+        $category->delete();
+
+            return response()->json([
+                "message" => 'el usuario ha sido eliminado'
+            ], 200);
     }
 }

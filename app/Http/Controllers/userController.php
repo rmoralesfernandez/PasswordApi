@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Category;
 use App\Helpers\Token;
+use App\Password;
 
 class userController extends Controller
 {
@@ -79,13 +81,29 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show(Request $request)
     {
-        $user = User::all();
-        foreach($user as $key => $value)
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
+
+        foreach ($user as $key => $value) 
         {
-            print($value);
+            $category = Category::where('user_id', $user->id)->get();
+
+            foreach ($category as $key => $value) 
+            {
+                $password = Password::where('category_id', $value->id)->get();
+            } 
         }
+        
+
+        
+
+        return response()->json([
+            "User" => $user, 
+                "Categories" => $category,
+                    "Passwords" => $password
+        ], 200);
     }
 
     /**
@@ -112,9 +130,7 @@ class userController extends Controller
         $email = $request->data_token->email;
         $user = User::where('email', $email)->first();
 
-        // $user_update = new User();
-        $user->name = $request->only('name');
-        var_dump($request->input('name'));exit;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
         $user->update();

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\Token;
 use App\Category;
-use App\Passwords;
+use App\Password;
 
 class passwordController extends Controller
 {
@@ -37,20 +37,16 @@ class passwordController extends Controller
      */
     public function store(Request $request)
     {
-        $token_header = $request->header('Authorization');
-        $token = new Token();
-        $data = $token->decode($token_header);
+        $password = new Password();
 
-        //$user = new User();
-        $category = Category::where('email', $data->email)->first();
+        $category_name = $request->category_name;
+        $category = Category::where('name', $category_name)->first();
+        $password = Password::where('name', $category_name)->first();
         
-        //var_dump($user);exit;
-        $category = new Category();
-        
-        $category->add_category($request, $user);
+        $password->add_password($request, $category);
 
         return response()->json([
-            "message" => "nueva categoria"
+            "message" => "contraseña creada"
         ], 200);
     }
 
@@ -83,9 +79,14 @@ class passwordController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $password_LastName = $request->LastName;
+        $password = Password::where('title', $password_LastName)->first();
+
+        $password->title = $request->NewName;
+        $password->password = $request->Newpassword;
+        $password->update();
     }
 
     /**
@@ -94,8 +95,15 @@ class passwordController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $password_title = $request->name;
+        $password = Password::where('title', $password_title)->first();
+
+        $password->delete();
+
+            return response()->json([
+                "message" => 'la contrasena ha sido eliminado'
+            ], 200);
     }
 }

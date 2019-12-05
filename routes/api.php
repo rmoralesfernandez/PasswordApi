@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth']], function ()
 {
     Route::apiResource('categories', 'categoryController');
     Route::apiResource('users', 'userController');
+    Route::apiResource('passwords', 'passwordController');
     // Route::get('show', 'userController@show');
     // Route::delete('destroy', 'userController@destroy');
     // Route::post('update', 'userController@update');
