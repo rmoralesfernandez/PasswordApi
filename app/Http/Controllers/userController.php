@@ -86,24 +86,24 @@ class userController extends Controller
         $email = $request->data_token->email;
         $user = User::where('email', $email)->first();
 
-        foreach ($user as $key => $value) 
+        $Array_data = array();
+
+        if(isset($user))
         {
             $category = Category::where('user_id', $user->id)->get();
 
-            foreach ($category as $key => $value) 
+            foreach ($category as $key => $category) 
             {
-                $password = Password::where('category_id', $value->id)->get();
-            } 
+                $password = Password::where('category_id', $category->id)->get();
+                array_push($Array_data, $password);
+                
+                return response()->json([
+                    "user" => $user,
+                    "categories" => $category,
+                    "passwords" => $Array_data
+                ], 200);
+            }
         }
-        
-
-        
-
-        return response()->json([
-            "User" => $user, 
-                "Categories" => $category,
-                    "Passwords" => $password
-        ], 200);
     }
 
     /**

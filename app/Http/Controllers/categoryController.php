@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
-use App\Helpers\Token;
 use App\User;
 
 class categoryController extends Controller
@@ -37,23 +36,29 @@ class categoryController extends Controller
      */
     public function store(Request $request)
     {
-        //print($request->email->email);exit;
         $email = $request->data_token->email;
-        // $token = new Token();
-        // $data = $token->decode($token_header);
-
-        //$user = new User();
         $user = User::where('email', $email)->first();
 
-        
-        //var_dump($user);exit;
         $category = new Category();
+        $category_name = $request->name;
+        $category_Searched = Category::where('user_id', $user->id)->first()->where('name', $category_name)->first();
         
-        $category->add_category($request, $user);
+        if(isset($category_Searched))
+        {
+            return response()->json([
+                "message" => "La categoria ya existe"
+            ], 401);
+        }
+        else
+        {
+            $category->add_category($request, $user);
 
-        return response()->json([
-            "message" => "nueva categoria"
-        ], 200);
+            return response()->json([
+                "message" => "nueva categoria"
+            ], 200);
+        }
+
+
     }
 
     /**
@@ -62,9 +67,13 @@ class categoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showCategory($id)
+    public function show(Request $request)
     {
-        $category = Category::all();
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
+
+        $category = Category::where('user_id', $user->id)->get();
+
         return response()->json([
             "Categories" => $category
         ], 200);
@@ -90,11 +99,27 @@ class categoryController extends Controller
      */
     public function update(Request $request)
     {
-        $category_LastName = $request->LastName;
-        $category = Category::where('name', $category_LastName)->first();
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
 
-        $category->name = $request->NewName;
-        $category->update();
+        $category_LastName = $request->LastName;
+        $category = Category::where('name', $category_LastName)->first()->where('user_id', $user->id)->first();
+
+        if(isset($category))
+        {
+            $category->name = $request->NewName;
+            $category->update();
+            return response()->json([
+                "message" => "se ha modificado la categoria"
+            ], 200);
+        }
+        else
+        {
+            return response()->json([
+                "message" => "La categoria no existe"
+            ], 401);
+        }
+        
     }
 
     /**
@@ -105,13 +130,25 @@ class categoryController extends Controller
      */
     public function destroy(Request $request)
     {
-        $category_name = $request->name;
-        $category = Category::where('name', $category_name)->first();
+        $email = $request->data_token->email;
+        $user = User::where('email', $email)->first();
 
-        $category->delete();
+        $category_name = $request->name;
+        $category = Category::where('name', $category_name)->first()->where('user_id', $user->id)->first();
+
+        if(isset($category))
+        {
+            $category->delete();
 
             return response()->json([
                 "message" => 'el usuario ha sido eliminado'
             ], 200);
+        }
+        else
+        {
+            return response()->json([
+                "message" => "La categoria no existe"
+            ], 401);
+        }
     }
 }

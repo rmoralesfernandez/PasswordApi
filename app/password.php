@@ -11,7 +11,7 @@ class Password extends Model
     protected $table = 'passwords';
     protected $filliable = ['title', 'password', 'category_id'];
 
-    public function add_password(Request $request, $category)
+    public function add_password(Request $request, $category_id)
     {
         $password = new Password();
 
@@ -19,7 +19,7 @@ class Password extends Model
         $password->title = $request->title;
        	// var_dump($password->title);exit;
         $password->password = $request->password;
-        $password->category_id = $category->id;
+        $password->category_id = $category_id;
         $password->save();
     }
 }
